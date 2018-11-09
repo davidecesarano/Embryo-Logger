@@ -1,0 +1,27 @@
+{
+    "name": "davidecesarano/embryo-logger",
+    "type": "library",
+    "description": "Minimalist and fast PSR-3 Stream logger. ",
+    "keywords": [
+        "php",
+        "psr-3",
+        "log"
+    ],
+    "homepage": "https://github.com/davidecesarano/embryo-logger",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Davide Cesarano",
+            "homepage": "https://github.com/davidecesarano"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "psr/log": "1.0.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Embryo\\": "Embryo/"
+        }
+    }
+}
