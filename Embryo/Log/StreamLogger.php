@@ -12,6 +12,7 @@
 
     namespace Embryo\Log;
 
+    use Embryo\Http\Factory\StreamFactory;
     use Psr\Http\Message\StreamFactoryInterface;
     use Psr\Log\LoggerInterface;
     use Psr\Log\LoggerTrait;
@@ -38,10 +39,10 @@
          * @param StreamFactoryInterface $streamFactory
          * @return void
          */
-        public function __construct(string $logPath, StreamFactoryInterface $streamFactory)
+        public function __construct(string $logPath, StreamFactoryInterface $streamFactory = null)
         {
             $this->logPath       = rtrim($logPath, '/');
-            $this->streamFactory = $streamFactory;
+            $this->streamFactory = ($streamFactory) ? $streamFactory : new StreamFactory;
         }
 
         /**
