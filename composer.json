@@ -19,6 +19,9 @@
         "php": ">=7.1",
         "psr/log": "1.0.2"
     },
+    "require-dev": {
+        "davidecesarano/embryo-http": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "Embryo\\": "Embryo/"
