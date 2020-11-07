@@ -17,10 +17,11 @@
     ],
     "require": {
         "php": ">=7.1",
-        "psr/log": "1.0.2"
+        "psr/log": "1.0.2",
+        "davidecesarano/embryo-http": "dev-master"
     },
     "require-dev": {
-        "davidecesarano/embryo-http": "dev-master"
+        "phpstan/phpstan": "^0.12.54"
     },
     "autoload": {
         "psr-4": {
