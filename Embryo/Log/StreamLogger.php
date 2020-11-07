@@ -27,9 +27,14 @@
         private $logPath;
 
         /**
-         * @var StreamFactoryInterface
+         * @var StreamFactoryInterface $streamFactory
          */
         private $streamFactory;
+
+        /**
+         * @var bool $splitByDate
+         */
+        private $splitByDate = true;
 
         /**
          * Set log path folder and StreamFactoryInterface
@@ -41,8 +46,20 @@
          */
         public function __construct(string $logPath, StreamFactoryInterface $streamFactory = null)
         {
-            $this->logPath       = rtrim($logPath, '/');
+            $this->logPath       = rtrim($logPath, DIRECTORY_SEPARATOR);
             $this->streamFactory = ($streamFactory) ? $streamFactory : new StreamFactory;
+        }
+
+        /**
+         * Split log file by date.
+         * 
+         * @param bool $splitByDate 
+         * @return self
+         */
+        public function setSplitByDate(bool $splitByDate): self
+        {
+            $this->splitByDate = $splitByDate;
+            return $this;
         }
 
         /**
@@ -52,6 +69,7 @@
          * @param mixed $message
          * @param array $context
          * @return void
+         * @throws \InvalidArgumentException
          */
         public function log($level, $message, array $context = [])
         {
@@ -59,7 +77,12 @@
                 throw new \InvalidArgumentException('Level or message must be a string');
             }
 
-            $file    = $this->logPath.'/'.$level.'.log';
+            $filename = $level;
+            if ($this->splitByDate) {
+                $filename = date('Y-m-d').'-'.$level;
+            }
+
+            $file    = $this->logPath.DIRECTORY_SEPARATOR.$filename.'.log';
             $stream  = $this->streamFactory->createStreamFromFile($file, 'a+');
             $content = $this->interpolate($message."\n", $context);   
             $stream->write($content);
@@ -72,7 +95,7 @@
          * @param array $context
          * @return string
          */
-        private function interpolate($message, array $context = array())
+        private function interpolate(string $message, array $context = array()): string
         {
             $replace = [];
             foreach ($context as $key => $val) {
