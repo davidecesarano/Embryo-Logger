@@ -12,6 +12,7 @@
 
     namespace Embryo\Log;
 
+    use Embryo\Log\StreamLoggerException;
     use Embryo\Http\Factory\StreamFactory;
     use Psr\Http\Message\StreamFactoryInterface;
     use Psr\Log\LoggerInterface;
@@ -69,7 +70,8 @@
          * @param mixed $message
          * @param array $context
          * @return void
-         * @throws \InvalidArgumentException
+         * @throws \InvalidArgumentException 
+         * @throws StreamLoggerException 
          */
         public function log($level, $message, array $context = [])
         {
@@ -82,10 +84,14 @@
                 $filename = date('Y-m-d').'-'.$level;
             }
 
-            $file    = $this->logPath.DIRECTORY_SEPARATOR.$filename.'.log';
-            $stream  = $this->streamFactory->createStreamFromFile($file, 'a+');
-            $content = $this->interpolate($message."\n", $context);   
-            $stream->write($content);
+            try {
+                $file    = $this->logPath.DIRECTORY_SEPARATOR.$filename.'.log';
+                $stream  = $this->streamFactory->createStreamFromFile($file, 'a+');
+                $content = $this->interpolate($message."\n", $context);   
+                $stream->write($content);
+            } catch (\Exception $e) {
+                throw new StreamLoggerException($e->getMessage());
+            }
         }
 
         /**
